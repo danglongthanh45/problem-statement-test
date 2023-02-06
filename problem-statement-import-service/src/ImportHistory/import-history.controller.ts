@@ -14,7 +14,6 @@ export class ImportHistoryController {
 
   @Post('create')
   createImportHistory(@Body() history: ImportHistoryDto): Promise<ImportHistory> {
-    console.log('createImportHistory');
     return this.importHistoryService.create(history);
   }
 

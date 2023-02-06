@@ -9,8 +9,6 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    env_file:
-      - ./rabbitmq.env
       
   my-sql-import:
     image: mysql:8.0
