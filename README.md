@@ -20,7 +20,7 @@ There are packages used for read stream file from cloud storage and parse to imp
 * [`csv-parse`]
   ([GitHub](https://github.com/adaltas/node-csv/tree/master/packages/csv-parse)),
   a parser converting CSV text into arrays or objects.
-* [`csv-parse`]
+* [`xlsx-parse-stream`]
   ([GitHub](https://github.com/staeco/xlsx-parse-stream)),
   a parser converting XLSX nto arrays or objects.
 * [`through2`]
