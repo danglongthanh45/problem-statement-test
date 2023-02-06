@@ -53,19 +53,22 @@ export class ImportTransactionService {
             await this.importTransactionRepo.save(record);
             cb(null, true);
         } catch(err) {
+          await this.updateHistory(ImportStatus.FAIL);
+          await this.s3Services.deleteObject({ Bucket: this.BUCKET_NAME, Key: data.keyfile}).promise();
           cb(err, true);
+          resolve();
         }            
       }))
-      .on('data', async function(csvrow) {
+      .on('data', async function() {
             // do something 
       })
       .on('end', async () => {
-        await this.updateHistory();
+        await this.updateHistory(ImportStatus.SUCCESS);
         await this.s3Services.deleteObject({ Bucket: this.BUCKET_NAME, Key: data.keyfile}).promise();
         console.log('File imported');
         resolve();
       })
-      .on('close', async function(csvrow) {
+      .on('close', async function() {
         resolve();
       })
       .on('error', err => {
@@ -91,19 +94,22 @@ export class ImportTransactionService {
               await this.importTransactionRepo.save(record);
               cb(null, true);
           } catch(err) {
+            await this.updateHistory(ImportStatus.FAIL);
+            await this.s3Services.deleteObject({ Bucket: this.BUCKET_NAME, Key: data.keyfile}).promise();
             cb(err, true);
+            resolve();
           }            
         }))
-        .on('data', async (csvrow) => {
+        .on('data', async () => {
           // do something
         }) 
         .on('end', async () => {
-          await this.updateHistory();
+          await this.updateHistory(ImportStatus.SUCCESS);
           await this.s3Services.deleteObject({ Bucket: this.BUCKET_NAME, Key: data.keyfile}).promise();
           console.log('File imported');
           resolve();
         })
-        .on('close', async function(csvrow) {
+        .on('close', async function() {
           resolve();
         })
         .on('error', err => {
@@ -113,11 +119,11 @@ export class ImportTransactionService {
     });
   }
 
-  async updateHistory() {
+  async updateHistory(status: ImportStatus) {
     const historyUpdate = await this.importHistoryRepo.findOneBy({
       id: this.historyId
     });
-    historyUpdate.status = ImportStatus.SUCCESS;
+    historyUpdate.status = status;
     await this.importHistoryRepo.save(historyUpdate);
   }
 

@@ -29,7 +29,7 @@ export class UsersService {
     } catch (err) {}
 
     if (userValidate) {
-      throw new UnprocessableEntityException('Email already exists.');
+      throw new UnprocessableEntityException('User already exists.');
     }
   }
 
